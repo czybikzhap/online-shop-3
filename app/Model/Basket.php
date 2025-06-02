@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace app\Model;
 
 use PDO;
 
@@ -35,12 +35,12 @@ class Basket
     }
 
 
-    public function AddProducts(): array
+    public function addProducts(): array
     {
-        $stmt = $this->conn->prepare("INSERT INTO baskets (user_id, product_id, amount)
+        $stmt = $this->conn->prepare("INSERT INTO baskets (user_id, product_id, quantity)
             VALUES (:user_id, :product_id, 1)
             ON CONFLICT (user_id, product_id) 
-            DO UPDATE SET amount = baskets.amount + EXCLUDED.amount");
+            DO UPDATE SET quantity = baskets.quantity + EXCLUDED.quantity");
         $stmt->execute(['user_id' => $this->userId, 'product_id' => $this->productId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -57,6 +57,21 @@ class Basket
         $stmt = ConnectFactory::connectDB()->prepare('DELETE FROM baskets 
        WHERE user_id = :user_id AND product_id = :product_id');
         $stmt->execute(['user_id' => $userId, 'product_id' => $productId]);
+    }
+
+    public static function updateQuantity(int $userId, int $productId, int $quantity)
+    {
+        $stmt = ConnectFactory::connectDB()->prepare("UPDATE baskets 
+            SET quantity = :quantity 
+            WHERE user_id = :user_id AND product_id = :product_id
+        ");
+
+        $stmt->execute([
+            'user_id' => $userId,
+            'product_id' => $productId,
+            'quantity' => $quantity,
+        ]);
+
     }
 
 

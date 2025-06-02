@@ -1,0 +1,44 @@
+<?php ob_start(); ?>
+
+<h2>Вход в аккаунт</h2>
+
+<?php if (!empty($errors['general'])): ?>
+    <p style="color:red"><?= $errors['general'] ?></p>
+<?php endif; ?>
+
+<form method="POST" style="max-width: 400px;">
+    <div style="margin-bottom: 10px;">
+        <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Email"
+            value="<?= htmlspecialchars($email ?? '') ?>"
+            style="width: 100%; padding: 8px;"
+        >
+        <?php if (isset($errors['email'])): ?>
+            <label style="color:red"><?= $errors['email'] ?></label>
+        <?php endif; ?>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Пароль"
+            style="width: 100%; padding: 8px;"
+        >
+        <?php if (isset($errors['password'])): ?>
+            <label style="color:red"><?= $errors['password'] ?></label>
+        <?php endif; ?>
+    </div>
+
+    <div class="buttons" style="display: flex; justify-content: space-between; align-items: center;">
+        <a href="/register" class="register-link">Зарегистрироваться</a>
+        <button type="submit" class="login-button" style="padding: 8px 16px;">Войти</button>
+    </div>
+</form>
+
+<?php $content = ob_get_clean(); ?>
+<?php require __DIR__ . '/../layouts/main.phtml'; ?>

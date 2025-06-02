@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Model;
+namespace app\Model;
 
-use PDO;
 
 class User
 {
@@ -42,6 +41,25 @@ class User
         $user->setUserId($data['id']);
 
         return $user;
+    }
+
+    public static function userProducts($userId)
+    {
+        $stmt = ConnectFactory::connectDB()->prepare("SELECT 
+            products.id, 
+            products.name, 
+            products.price, 
+            products.image_url,
+            baskets.quantity
+            FROM baskets
+            JOIN products ON products.id = baskets.product_id
+            WHERE baskets.user_id = :user_id
+        ");
+
+        $stmt->execute(['user_id' => $userId]);
+        $products = $stmt->fetchAll();
+
+        return $products;
     }
 
     public function getPassword(): string

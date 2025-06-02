@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace app\Controller;
 
-use App\Model\User;
+use app\Model\User;
 
 class UserController
 {
@@ -21,16 +21,18 @@ class UserController
 
                 if (!empty($user) && (password_verify($password, $user->getPassword()))) {
                     session_start();
-                    $_SESSION['id'] = $user->getUserId();
+                    $_SESSION['user_id'] = $user->getUserId();
                     header('Location:./main');
+                    exit;
                 } else {
                     $errors['password'] = 'неверное имя пользователя или пароль';
                 }
             }
         }
         return [
-            'view' => 'login',
+            'view' => 'auth/login',
             'data' => [
+                'email' => $email ?? '',
                 'errors' => $errors
             ]
         ];
@@ -56,7 +58,7 @@ class UserController
         }
         return $errors;
     }
-    public function signup (): array
+    public function register(): array
     {
         $errors = [];
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
@@ -79,8 +81,10 @@ class UserController
             }
         }
         return [
-            'view' => 'signup',
+            'view' => 'auth/register',
             'data' => [
+                'name' => $name ?? '',
+                'email' => $email ?? '',
                 'errors' => $errors
             ]
         ];
@@ -139,6 +143,11 @@ class UserController
     public function logout (): void
     {
         session_start();
-        unset($_SESSION['id']);
+        unset($_SESSION['user_id']);
+
+        session_destroy();
+
+        header('Location: /login');
+        exit;
     }
 }

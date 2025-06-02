@@ -1,0 +1,41 @@
+<?php
+$content = ob_get_clean();
+require __DIR__ . '/layouts/main.phtml';
+?>
+
+<!-- orders.phtml -->
+<div class="container">
+    <h3>Мои заказы</h3>
+
+    <?php if (!empty($userProducts)): ?>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                    <thead>
+                    <tr style="background-color: #f0f0f0;">
+                        <th style="border: 1px solid #ddd; padding: 8px;">Товар</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Количество</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Цена за ед.</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Сумма</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($userProducts['items'] as $item): ?>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;"><?= htmlspecialchars($item['name']); ?></td>
+                            <td style="border: 1px solid #ddd; padding: 8px; text-align: center;"><?= (int)$item['quantity']; ?></td>
+                            <td style="border: 1px solid #ddd; padding: 8px; text-align: right;"><?= $item['price'] . ' руб'; ?></td>
+                            <td style="border: 1px solid #ddd; padding: 8px; text-align: right;"><?= ($item['price'] * $item['quantity']) . ' руб'; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="3" style="border: 1px solid #ddd; padding: 8px; text-align: right;"><strong>Итого:</strong></td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right;"><strong><?= $item['total'] . ' руб'; ?></strong></td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+    <?php else: ?>
+        <p>У вас пока нет заказов.</p>
+    <?php endif; ?>
+</div>

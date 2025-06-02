@@ -1,167 +1,94 @@
-<style>
+<?php
+$content = ob_get_clean();
+require __DIR__ . '/layouts/main.phtml';
+?>
 
-    @font-face {
-        font-family: arial;
-        font-weight: normal;
-        font-style: normal;
-    }
+<!-- cart.phtml -->
+<div class="container">
+    <h3>Корзина</h3>
 
-    html, body {
-        margin:0;
-        padding:0;
-    }
-
-    body {
-        text-align:left;
-        font:100% arial;
-        background:#fff;
-    }
-
-    h1, h2, h3, h4, h5, h6, p, div, ul , li {
-        margin:0;
-        padding:0;
-        color:rgb(0,0,0);
-    }
-
-    p {
-        color:#333;
-    }
-
-    a {
-        color:#995522;
-        text-decoration:none;
-    }
-
-    #mainContent {
-        position:relative;
-        padding:0;
-        width:930px;
-        margin:25px auto;
-        border:1px solid #00CCFF;
-        border-radius: 10px;
-    }
-
-    #mainContent #header {
-        height:110px;
-        background-color:#00CCFF;
-        border-radius:10px 10px 0 0;
-    }
-
-    #mainContent #header h1 {
-        font-size:2.5em;
-        padding:10px;
-    }
-
-    #mainContent #header ul {
-        list-style:none;
-        padding-left:5px;
-    }
-
-    #mainContent #header ul li {
-        float:left;
-        padding-left:5px;
-    }
-
-    #mainContent #header ul li a {
-        color:#000;
-        font-size:1.2em;
-        text-decoration:underline;
-    }
-
-    #mainContent #header ul li a:hover {
-        color:#fff;
-    }
-
-    #mainContent #mainArticle h2 {
-        font-size:2em;
-        padding: 10px 10px 10px;
-    }
-
-    #mainContent #mainArticle table {
-        font-size: 1.2em;
-        border:1px solid #00CCFF;
-        margin:auto 10px 40px;
-        width:910px;
-        border-collapse:collapse;
-    }
-
-    #mainContent #mainArticle table th {
-        border:colapse;
-        background-color:#00CCFF;
-        text-align:left;
-    }
-
-    #mainContent #mainArticle table th,td  {
-        border:1px solid #00CCFF;
-        margin:0;
-        padding: 5px;
-    }
-
-    #mainContent #footer p {
-        padding:10px;
-    }
-
-    #mainArticle #myTable a {
-        font-size:1.2em;
-        cursor:pointer;
-    }
-
-</style>
-<!DOCTYPE html>
-<html>
-<head>
-
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-    <title>Shopping basket</title>
-
-    <link href="main.css" rel="stylesheet" type="text/css" />
-
-</head>
-<body>
-<div id="mainContent">
-    <div id="header">
-        <h1>МОЯ КОРЗИНА</h1>
-
-    </div>
-    <div id="mainArticle">
-        <h2>Shopping Basket</h2>
-
-        <table id="myTable">
+    <?php if (!empty($userProducts)): ?>
+        <table class="table table-bordered">
+            <thead>
             <tr>
-
-                <th>User ID</th>
-                <th>Product ID</th>
-                <th>Quantity</th>
-                <th>Total Amount</th>
+                <th>Товар</th>
+                <th>Цена</th>
+                <th>Количество</th>
+                <th>Общая стоимость</th>
+                <th>Действия</th>
             </tr>
-            <?php foreach ($basket as $elem): ?>
-            <tr>
-                <td><?php echo $elem['user_id']; ?></td>
-                <td><?php echo $elem['product_id']; ?></td>
-                <td><?php echo $elem['amount']; ?></td>
-                <td><?php echo $elem['amount'] * 100; ?></td>
-                <td>  <form action="/deleteProduct" method="POST">
-                        <input type="hidden" name="product_id" value="<?php echo $elem['product_id']; ?>">
-                        <input type="submit" value="Удалить продукт">
-                    </form></td>
-                <?php endforeach; ?>
-            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($userProducts as $item): ?>
+                <tr>
+                    <td><?= htmlspecialchars($item['name']); ?></td>
+                    <td><?= $item['price'] . ' руб'; ?></td>
+                    <td>
+                        <form action="/updateQuantity" method="POST">
+                            <input type="hidden" name="product_id" value="<?= $item['id']; ?>">
+                            <input type="number" name="quantity" value="<?= $item['quantity']; ?>" min="1" style="width: 60px;">
+                            <button type="submit" class="btn btn-warning btn-sm">Обновить</button>
+                        </form>
+                    </td>
+                    <td><?= ($item['price'] * $item['quantity']) . ' руб'; ?></td>
+                    <td>
+                        <form action="/deleteProduct" method="POST">
+                            <input type="hidden" name="product_id" value="<?= $item['id']; ?>">
+                            <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
         </table>
-    </div>
-    <div id="footer">
-        <p>&copy; Copyright BT Expedite 2014</p>
-    </div>
-        <div class="buttons">
-            <a href="main" class="register-link">Перейти на главную страницу</a>
+
+        <!-- Общая стоимость корзины -->
+        <div class="total">
+            <h4>Общая стоимость: <?= $totalPrice . ' руб'; ?></h4>
         </div>
-    <form action="/delete" method="POST">
-        <input type="hidden" name="delete_product" value="<?php  ?>">
-        <br><br>
-        <input type="submit" value="Удалить корзину">
-    </form>
+
+        <!-- Кнопка оформления заказа -->
+        <div class="checkout">
+            <a href="/checkout" class="btn btn-success btn-lg">Оформить заказ</a>
+        </div>
+    <?php else: ?>
+        <p>Ваша корзина пуста.</p>
+    <?php endif; ?>
 </div>
-<script src="js.js"></script>
-</body>
-</html>
+
+
+<style>
+    .table th, .table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .table {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .total {
+        margin-top: 20px;
+        text-align: right;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .checkout {
+        margin-top: 20px;
+        text-align: right;
+    }
+
+    .btn-sm {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+    }
+
+    .btn-lg {
+        font-size: 1.2rem;
+        padding: 10px 20px;
+    }
+</style>
+
 

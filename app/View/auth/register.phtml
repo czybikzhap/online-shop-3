@@ -1,0 +1,55 @@
+<?php ob_start(); ?>
+
+<h2>Регистрация</h2>
+
+<?php if (!empty($errors['general'])): ?>
+    <p style="color:red"><?= $errors['general'] ?></p>
+<?php endif; ?>
+
+<form action="" method="POST" style="max-width: 500px;">
+    <div style="margin-bottom: 12px;">
+        <label for="name">Full Name:</label><br>
+        <input type="text" id="name" name="name" required
+               value="<?= htmlspecialchars($name ?? '') ?>"
+               style="width: 100%; padding: 8px;">
+        <?php if (isset($errors['name'])): ?>
+            <label style="color:red"><?= $errors['name'] ?></label>
+        <?php endif; ?>
+    </div>
+
+    <div style="margin-bottom: 12px;">
+        <label for="email">Email Address:</label><br>
+        <input type="email" id="email" name="email" required
+               value="<?= htmlspecialchars($email ?? '') ?>"
+               style="width: 100%; padding: 8px;">
+        <?php if (isset($errors['email'])): ?>
+            <label style="color:red"><?= $errors['email'] ?></label>
+        <?php endif; ?>
+    </div>
+
+    <div style="margin-bottom: 12px;">
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required
+               style="width: 100%; padding: 8px;">
+        <?php if (isset($errors['password'])): ?>
+            <label style="color:red"><?= $errors['password'] ?></label>
+        <?php endif; ?>
+    </div>
+
+    <div style="margin-bottom: 12px;">
+        <label for="userPassword">Repeat Password:</label><br>
+        <input type="password" id="userPassword" name="repeat_pwd" required
+               style="width: 100%; padding: 8px;">
+        <?php if (isset($errors['repeat_pwd'])): ?>
+            <label style="color:red"><?= $errors['repeat_pwd'] ?></label>
+        <?php endif; ?>
+    </div>
+
+    <div style="text-align: right;">
+        <input type="submit" value="Submit Application"
+               style="padding: 10px 20px;">
+    </div>
+</form>
+
+<?php $content = ob_get_clean(); ?>
+<?php require __DIR__ . '/../layouts/main.phtml'; ?>

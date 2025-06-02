@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title><?= $title ?? 'Мой сайт' ?></title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        header {
+            background-color: #f5f5f5;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+        }
+        nav.left, nav.right {
+            display: flex;
+            gap: 15px;
+        }
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        main {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="left">
+        <a href="/catalog">Каталог</a>
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <a href="/basket">Корзина</a>
+            <a href="/orders">Мои заказы</a>
+        <?php endif; ?>
+    </nav>
+
+    <nav class="right">
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <a href="/logout">Выйти</a>
+        <?php else: ?>
+            <a href="/login">Войти</a>
+            <a href="/register">Зарегистрироваться</a>
+        <?php endif; ?>
+    </nav>
+</header>
+
+<main>
+    <?= $content ?? '' ?>
+</main>
+</body>
+</html>

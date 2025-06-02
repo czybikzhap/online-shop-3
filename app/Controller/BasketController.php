@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Controller;
+namespace app\Controller;
 
-use App\Model\Basket;
+use app\Model\Basket;
+use app\Model\User;
 
 class BasketController
 {
@@ -10,17 +11,19 @@ class BasketController
     public function basket(): array
     {
         session_start();
-        if (!isset($_SESSION['id'])) {
+        if (!isset($_SESSION['user_id'])) {
             header('Location :/login');
+            exit;
         }
-        $userId = $_SESSION['id'];
 
-        $basket = Basket::getBasket($userId);
+        $userId = $_SESSION['user_id'];
+
+        $userProducts = User::userProducts($userId);
 
         return [
             'view' => 'baskets',
             'data' => [
-                'basket' => $basket,
+                'userProducts' =>  $userProducts
             ]
         ];
     }
@@ -28,10 +31,10 @@ class BasketController
     public function addProducts(): void
     {
         session_start();
-        if (!isset($_SESSION['id'])) {
+
+        if (!isset($_SESSION['user_id'])) {
             header('Location :/login');
-        } else {
-            header("Location: /main");
+            exit;
         }
 
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
@@ -40,11 +43,13 @@ class BasketController
 
             if(empty($errors)) {
 
-                $userId = $_SESSION['id'];
+                $userId = $_SESSION['user_id'];
                 $productId = $_POST['product_id'];
 
                 $addProduct = new Basket($userId, $productId);
-                $addProduct->AddProducts();
+                $addProduct->addProducts();
+
+                header('Location: /basket');
 
             }
         }
@@ -52,7 +57,7 @@ class BasketController
     public function delete(): void
     {
         session_start();
-        if (!isset($_SESSION['id'])) {
+        if (!isset($_SESSION['user_id'])) {
             header('Location: /login');
         } else {
             header('Location: /basket');
@@ -67,17 +72,42 @@ class BasketController
     public function deleteProduct(): void
     {
         session_start();
-        if (!isset($_SESSION['id'])) {
+        if (!isset($_SESSION['user_id'])) {
             header('Location: /login');
+            exit;
         } else {
             header('Location: /basket');
         }
 
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
             print_r($_POST);
-            Basket::deleteProduct($_SESSION['id'], $_POST['product_id']);
+            Basket::deleteProduct($_SESSION['user_id'], $_POST['product_id']);
 
         }
+    }
+
+    public function updateQuantity(): void
+    {
+        session_start();
+
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /login');
+            exit;
+        }
+
+        $userId = $_SESSION['user_id'];
+        $productId = $_POST['product_id'] ?? null;
+        $quantity = $_POST['quantity'] ?? null;
+
+        if ($productId === null || $quantity === null || !is_numeric($quantity) || $quantity < 1) {
+            header('Location: /basket');
+            exit;
+        } else {
+            Basket::updateQuantity($userId,  $productId, $quantity);
+        }
+
+        header('Location: /basket');
+        exit;
     }
 
     private function isValidAddProduct(array $data): array
