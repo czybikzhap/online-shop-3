@@ -16,6 +16,7 @@ return [
     '/updateQuantity' => [BasketController::class, 'updateQuantity'],
     '/deleteProduct' => [BasketController::class, 'deleteProduct'],
     '/delete' => [BasketController::class, 'delete'],
-    '/getOrders' => [OrderController::class, 'getOrders']
+    '/getOrders' => [OrderController::class, 'getOrders'],
+    '/order' => [OrderController::class, 'order']
 
 ];

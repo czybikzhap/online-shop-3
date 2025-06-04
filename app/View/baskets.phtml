@@ -3,6 +3,13 @@ $content = ob_get_clean();
 require __DIR__ . '/layouts/main.phtml';
 ?>
 
+<?php if (!empty($_SESSION['error'])): ?>
+    <div class="alert alert-danger">
+        <?= htmlspecialchars($_SESSION['error']) ?>
+    </div>
+    <?php unset($_SESSION['error']); ?>
+<?php endif; ?>
+
 <!-- cart.phtml -->
 <div class="container">
     <h3>Корзина</h3>
@@ -44,12 +51,19 @@ require __DIR__ . '/layouts/main.phtml';
 
         <!-- Общая стоимость корзины -->
         <div class="total">
-            <h4>Общая стоимость: <?= $totalPrice . ' руб'; ?></h4>
+            <h4>Общая стоимость: <?= $totalCost . ' руб'; ?></h4>
+        </div>
+
+        <!-- Очистка корзины -->
+        <div class="clear-basket" style="margin-top: 10px;">
+            <form action="/delete" method="POST" onsubmit="return confirm('Вы уверены, что хотите очистить корзину?');">
+                <button type="submit" class="btn btn-outline-danger btn-sm">Очистить корзину</button>
+            </form>
         </div>
 
         <!-- Кнопка оформления заказа -->
         <div class="checkout">
-            <a href="/checkout" class="btn btn-success btn-lg">Оформить заказ</a>
+            <a href="/getOrders" class="btn btn-success btn-lg">Оформить заказ</a>
         </div>
     <?php else: ?>
         <p>Ваша корзина пуста.</p>

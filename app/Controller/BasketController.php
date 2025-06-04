@@ -4,6 +4,7 @@ namespace app\Controller;
 
 use app\Model\Basket;
 use app\Model\User;
+use app\Services\BasketService;
 
 class BasketController
 {
@@ -20,9 +21,14 @@ class BasketController
 
         $userProducts = User::userProducts($userId);
 
+        $totalCost = new BasketService();
+
+        $totalCost = $totalCost->totalCost($userId);
+
         return [
             'view' => 'baskets',
             'data' => [
+                'totalCost' => $totalCost,
                 'userProducts' =>  $userProducts
             ]
         ];
@@ -33,40 +39,43 @@ class BasketController
         session_start();
 
         if (!isset($_SESSION['user_id'])) {
-            header('Location :/login');
+            header('Location: /login');
             exit;
         }
 
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
+            $basketService = new BasketService();
 
-            $errors = $this->isValidAddProduct($_POST);
+            $userId = $_SESSION['user_id'];
 
-            if(empty($errors)) {
+            $errors = $basketService->addProduct($_POST, $userId);
 
-                $userId = $_SESSION['user_id'];
-                $productId = $_POST['product_id'];
-
-                $addProduct = new Basket($userId, $productId);
-                $addProduct->addProducts();
-
+            if (empty($errors)) {
                 header('Location: /basket');
-
+                exit;
             }
+
         }
     }
+
     public function delete(): void
     {
         session_start();
+
         if (!isset($_SESSION['user_id'])) {
             header('Location: /login');
-        } else {
-            header('Location: /basket');
+            exit;
         }
 
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
+            $userId = $_SESSION['user_id'];
 
-            Basket::delete($_SESSION['id']);
+            $basketService = new BasketService();
+            $basketService->clearBasket($userId);
         }
+
+        header('Location: /basket');
+        exit;
     }
 
     public function deleteProduct(): void
@@ -80,9 +89,11 @@ class BasketController
         }
 
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
-            print_r($_POST);
-            Basket::deleteProduct($_SESSION['user_id'], $_POST['product_id']);
 
+            $userId = $_SESSION['user_id'];
+
+            $deleteProduct = new BasketService();
+            $deleteProduct->deleteProduct($userId, $_POST['product_id']);
         }
     }
 
@@ -99,28 +110,20 @@ class BasketController
         $productId = $_POST['product_id'] ?? null;
         $quantity = $_POST['quantity'] ?? null;
 
-        if ($productId === null || $quantity === null || !is_numeric($quantity) || $quantity < 1) {
-            header('Location: /basket');
-            exit;
-        } else {
-            Basket::updateQuantity($userId,  $productId, $quantity);
+        $basketService = new BasketService();
+
+        $result = $basketService->updateQuantity(
+            (int)$userId,
+            (int)$productId,
+            (int)$quantity
+        );
+
+        if (!empty($result['error'])) {
+            $_SESSION['error'] = $result['error'];
         }
 
         header('Location: /basket');
         exit;
     }
 
-    private function isValidAddProduct(array $data): array
-    {
-        $errors = [];
-        if (!isset($data['product_id'])) {
-            $errors['product_id'] = 'product_id is required';
-        } else {
-            $productId = $data['product_id'];
-            if (empty($productId)) {
-                $errors['product_id'] = 'product_id не может быть пустым';
-            }
-        }
-        return $errors;
-    }
 }

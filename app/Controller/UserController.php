@@ -14,8 +14,8 @@ class UserController
 
             if (empty($errors)) {
 
-                $email = $_POST['email'];
-                $password = $_POST['password'];
+                $email = $_POST['email'] ?? '';
+                $password = $_POST['password'] ?? '';
 
                 $user = User::getUser($email);
 
@@ -67,9 +67,9 @@ class UserController
             if (empty($errors)) {
                 session_start();
 
-                $name = $_POST['name'];
-                $email = $_POST['email'];
-                $password = $_POST['password'];
+                $name = $_POST['name'] ?? '';
+                $email = $_POST['email'] ?? '';
+                $password = $_POST['password'] ?? '';
 
                 $hash = password_hash($password, PASSWORD_DEFAULT);
 
