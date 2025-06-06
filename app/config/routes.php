@@ -8,6 +8,8 @@ use app\Controller\OrderController;
 return [
     '/register' => [UserController::class, 'register'],
     '/login' => [UserController::class, 'login'],
+    '/getProfile' => [UserController::class, 'getProfile'],
+    '/editProfile' => [UserController::class, 'editProfile'],
     '/main' => [MainController::class, 'main'],
     '/catalog' => [MainController::class, 'catalog'],
     '/basket' => [BasketController::class, 'basket'],

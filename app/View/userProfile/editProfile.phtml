@@ -1,0 +1,45 @@
+<!-- views/edit-profile.php -->
+
+<?php include __DIR__ . '/../layouts/main.phtml'; ?>
+
+<?php $title = 'Редактировать профиль'; ?>
+
+<h1>Редактировать профиль</h1>
+
+<form action="/editProfile" method="POST">
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="alert alert-danger"><?= $_SESSION['error']; unset($_SESSION['error']); ?></div>
+    <?php endif; ?>
+
+    <div>
+        <label for="name">Имя:</label>
+        <input type="text" id="name" name="name" value="<?= htmlspecialchars($user['name']); ?>" required>
+    </div>
+
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']); ?>" required>
+    </div>
+
+    <div>
+        <label for="password">Новый пароль:</label>
+        <input type="password" id="password" name="password">
+        <?php if (isset($errors['password'])): ?>
+            <label style="color:red"><?= $errors['password'] ?></label>
+        <?php endif; ?>
+    </div>
+
+    <div>
+        <label for="password_confirm">Подтвердите пароль:</label>
+        <input type="password" id="password_confirm" name="repeat_pwd">
+        <?php if (isset($errors['repeat_pwd'])): ?>
+            <label style="color:red"><?= $errors['repeat_pwd'] ?></label>
+        <?php endif; ?>
+    </div>
+
+    <div>
+        <button type="submit">Сохранить</button>
+    </div>
+</form>
+
+<a href="/getProfile">Назад к профилю</a>

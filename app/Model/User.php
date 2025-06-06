@@ -27,7 +27,7 @@ class User
         return $stmt->fetch();
     }
 
-    public static function getUser(string $email): User|null
+    public static function getUserByEmail(string $email): User|null
     {
         $stmt = ConnectFactory::connectDB()->prepare("SELECT * FROM users WHERE email = :email ");
         $stmt->execute(['email' => $email]);
@@ -42,6 +42,42 @@ class User
 
         return $user;
     }
+
+    public static function getUserById(int $id): array|null
+    {
+        $stmt = ConnectFactory::connectDB()->prepare("SELECT * FROM users WHERE id = :id ");
+        $stmt->execute(['id' => $id]);
+        $data = $stmt->fetch();
+
+        if (!$data) {
+            return null;
+        }
+
+        return $data;
+    }
+
+    public static function updateUser(int $id, string $name, string $email, ?string $password = null): array
+    {
+        // Если пароль не передан, оставляем старый
+        if ($password) {
+            $query = "UPDATE users SET name = :name, email = :email, password = :password WHERE id = :id";
+        } else {
+            $query = "UPDATE users SET name = :name, email = :email WHERE id = :id";
+        }
+
+        $stmt = ConnectFactory::connectDB()->prepare($query);
+
+        $stmt->execute([
+            'name' => $name,
+            'email' => $email,
+            'password' => $password,
+            'id' => $id
+        ]);
+
+        return self::getUserById($id);
+    }
+
+
 
     public static function userProducts($userId)
     {

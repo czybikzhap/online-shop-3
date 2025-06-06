@@ -11,16 +11,16 @@ class MainController
     {
         session_start();
 
-        // Проверка на авторизацию
+
         if (!isset($_SESSION['user_id'])) {
             header('Location: /login');
             exit;
         }
 
         return [
-            'view' => 'home/index', // Путь к представлению
+            'view' => 'home/index',
             'data' => [
-                'pageTitle' => 'Каталог товаров', // Заголовок страницы
+                'pageTitle' => 'Каталог товаров',
             ]
         ];
     }
@@ -31,14 +31,18 @@ class MainController
 
         $products = Products::getProducts();
 
-        // Параметры для шаблона
         return [
-            'view' => 'catalog', // Путь к представлению
+            'view' => 'catalog',
             'data' => [
-                'pageTitle' => 'Каталог товаров', // Заголовок страницы
-                'products' => $products, // Если переменная $products не существует, передаем пустой массив
+                'pageTitle' => 'Каталог товаров',
+                'products' => $products,
             ]
         ];
+
+    }
+
+    public function getAdminCatalog()
+    {
 
 
     }

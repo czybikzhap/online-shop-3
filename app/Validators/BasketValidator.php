@@ -18,17 +18,23 @@ class BasketValidator
         return $errors;
     }
 
-    public static function validateQuantity($quantity): bool
-    {
-        return is_numeric($quantity) && $quantity > 0;
-    }
-
     public static function validateQuantityUpdate(mixed $productId, mixed $quantity): bool
     {
         return isset($productId, $quantity)
             && is_numeric($productId)
             && is_numeric($quantity)
             && (int)$quantity > 0;
+    }
+
+    public static function  validateBasket(array $userProducts): array
+    {
+        $errors = [];
+
+        if (empty($userProducts)) {
+            $errors['basket'] = 'Ваша корзина пуста!';
+        }
+
+        return $errors;
     }
 
 }

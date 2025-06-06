@@ -12,7 +12,7 @@ require __DIR__ . '/layouts/main.phtml';
         <?php if (!empty($products)): ?>
             <?php foreach ($products as $product): ?>
                 <div class="card text-center" style="width: 18rem;">
-                    <img class="card-img-top" src="<?= $product['image_url']; ?>" alt="Product image" width="400" height="300">
+                    <img class="card-img-top" src="<?= $product['image_url']; ?>" alt="Product image" width="400" height="700">
                     <div class="card-body">
                         <h5 class="card-title"><?= $product['name']; ?></h5>
                         <p class="card-text"><?= $product['description']; ?></p>

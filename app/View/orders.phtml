@@ -3,9 +3,16 @@ $content = ob_get_clean();
 require __DIR__ . '/layouts/main.phtml';
 ?>
 
+<?php if (!empty($_SESSION['error'])): ?>
+    <div class="alert alert-danger">
+        <?= htmlspecialchars($_SESSION['error']) ?>
+    </div>
+    <?php unset($_SESSION['error']); ?>
+<?php endif; ?>
+
 <div class="container my-4">
 
-    <h3>Мои заказы</h3>
+    <h3>Отправить заказ</h3>
 
     <?php if (!empty($userProducts)): ?>
         <table class="table table-bordered mt-3">

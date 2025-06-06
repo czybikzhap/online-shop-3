@@ -32,7 +32,7 @@ class BasketService
             return $errors;
         }
 
-        $productId = (int) $data['product_id'];
+        $productId = $data['product_id'];
 
         $basket = new Basket($userId, $productId);
         $basket->addProducts();

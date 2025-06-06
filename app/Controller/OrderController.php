@@ -5,6 +5,7 @@ namespace app\Controller;
 use app\Model\User;
 use app\Services\BasketService;
 use app\Services\OrderService;
+use app\Validators\BasketValidator;
 
 class OrderController
 {
@@ -51,14 +52,15 @@ class OrderController
 
             if (empty($phone) || empty($address)) {
                 $_SESSION['error'] = 'Пожалуйста, заполните все поля';
-                header('Location: /basket');
+                header('Location: /getOrders');
                 exit;
             }
 
             $userProducts = User::userProducts($userId);
+            $basketErrors = BasketValidator::validateBasket($userProducts);
 
-            if (empty($userProducts)) {
-                $_SESSION['error'] = 'Ваша корзина пуста';
+            if (!empty($basketErrors)) {
+                $_SESSION['error'] = $basketErrors;
                 header('Location: /basket');
                 exit;
             } else {
