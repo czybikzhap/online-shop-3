@@ -1,0 +1,23 @@
+<?php
+$content = ob_get_clean();
+require __DIR__ . '/../layouts/main.phtml';
+?>
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админка</title>
+</head>
+<body>
+<h1>Добро пожаловать в админку!</h1>
+<p>Здесь вы можете управлять товарами, заказами и пользователями.</p>
+<!-- Добавьте ссылки на другие разделы админки -->
+<ul>
+    <li><a href="/updateCatalog">Управление товарами</a></li>
+    <li><a href="manage_orders.php">Управление заказами</a></li>
+    <li><a href="manage_users.php">Управление пользователями</a></li>
+</ul>
+</body>
+</html>

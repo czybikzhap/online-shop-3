@@ -78,7 +78,7 @@ class BasketController
         exit;
     }
 
-    public function deleteProduct(): void
+    public function deleteProductInBasket(): void
     {
         session_start();
 

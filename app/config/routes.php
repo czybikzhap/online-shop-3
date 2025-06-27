@@ -1,5 +1,6 @@
 <?php
 
+use app\Controller\AdminController;
 use app\Controller\BasketController;
 use app\Controller\MainController;
 use app\Controller\UserController;
@@ -16,9 +17,13 @@ return [
     '/addProduct' => [BasketController::class, 'addProducts'],
     '/logout' => [UserController::class, 'logout'],
     '/updateQuantity' => [BasketController::class, 'updateQuantity'],
-    '/deleteProduct' => [BasketController::class, 'deleteProduct'],
+    '/deleteProductInBasket' => [BasketController::class, 'deleteProductInBasket'],
     '/delete' => [BasketController::class, 'delete'],
     '/getOrders' => [OrderController::class, 'getOrders'],
-    '/order' => [OrderController::class, 'order']
+    '/order' => [OrderController::class, 'order'],
+    '/admin' => [AdminController::class, 'dashboard'],
+    '/updateCatalog' => [AdminController::class, 'updateCatalog'],
+    '/editProduct' => [MainController::class, 'editProduct'],
+    '/deleteProduct' => [MainController::class, 'deleteProduct']
 
 ];

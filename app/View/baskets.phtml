@@ -3,12 +3,6 @@ $content = ob_get_clean();
 require __DIR__ . '/layouts/main.phtml';
 ?>
 
-<?php if (!empty($_SESSION['error'])): ?>
-    <div class="alert alert-danger">
-        <?= htmlspecialchars($_SESSION['error']) ?>
-    </div>
-    <?php unset($_SESSION['error']); ?>
-<?php endif; ?>
 
 <!-- cart.phtml -->
 <div class="container">
@@ -39,7 +33,7 @@ require __DIR__ . '/layouts/main.phtml';
                     </td>
                     <td><?= ($item['price'] * $item['quantity']) . ' руб'; ?></td>
                     <td>
-                        <form action="/deleteProduct" method="POST">
+                        <form action="/deleteProductInBasket" method="POST">
                             <input type="hidden" name="product_id" value="<?= $item['id']; ?>">
                             <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
                         </form>

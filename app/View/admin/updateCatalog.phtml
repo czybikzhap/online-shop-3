@@ -1,0 +1,120 @@
+<div class="container">
+    <h3>Каталог товаров</h3>
+    <div class="card-deck">
+        <?php if (!empty($products)): ?>
+        <?php foreach ($products as $product): ?>
+        <div class="card text-center" style="width: 18rem;">
+            <img class="card-img-top" src="<?= htmlspecialchars($product['image_url']); ?>"
+                 alt="Фото товара: <?= htmlspecialchars($product['name']); ?>"
+                 width="400" height="700">
+            <div class="card-body">
+                <form action="/editProduct" method="POST">
+                    <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+
+                    <div class="form-group">
+                        <label for="name-<?= htmlspecialchars($product['id']); ?>">Название:</label>
+                        <input type="text" id="name-<?= htmlspecialchars($product['id']); ?>"
+                               name="name"
+                               value="<?= htmlspecialchars($product['name']); ?>"
+                               required class="form-control">
+                    </div>
+                    <?php if (isset($errors['name'])): ?>
+                        <label style="color:red"><?= $errors['name'] ?></label>
+                    <?php endif; ?>
+                    <div class="form-group">
+                        <label for="description-<?= htmlspecialchars($product['id']); ?>">Описание:</label>
+                        <input type="text" id="description-<?= htmlspecialchars($product['id']); ?>"
+                               name="description"
+                               value="<?= htmlspecialchars($product['description']); ?>"
+                               required class="form-control">
+                    </div>
+                    <?php if (isset($errors['description'])): ?>
+                        <label style="color:red"><?= $errors['description'] ?></label>
+                    <?php endif; ?>
+
+                    <div class="form-group">
+                        <label for="price-<?= htmlspecialchars($product['id']); ?>">Цена:</label>
+                        <input type="text" id="price-<?= htmlspecialchars($product['id']); ?>"
+                               name="price"
+                               value="<?= htmlspecialchars($product['price']); ?>"
+                               required class="form-control">
+                    </div>
+                    <?php if (isset($errors['price'])): ?>
+                        <label style="color:red"><?= $errors['price'] ?></label>
+                    <?php endif; ?>
+
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </form>
+            </div>
+            <div class="card-footer">
+                <form action="/deleteProduct" method="POST" style="margin-top: 10px;">
+                    <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']); ?>">
+                    <button type="submit" class="btn btn-danger"
+                            onclick="return confirm('Вы уверены, что хотите удалить этот товар?');">
+                        Удалить
+                    </button>
+                </form>
+            </div>
+        </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Нет товаров в каталоге.</p>
+        <?php endif; ?>
+    </div>
+    <div class="text-center" style="margin-top: 20px;">
+        <a href="/addNewProduct" class="btn btn-success">Добавить новый товар</a>
+    </div>
+</div>
+
+
+
+    <style>
+    .card-deck {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: space-between;
+    }
+
+    .card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        width: 18rem;
+    }
+
+    .card-img-top {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .card-footer {
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-top: 1px solid #ddd;
+    }
+
+    .price {
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        padding: 10px 20px;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+</style>
